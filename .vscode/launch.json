@@ -15,7 +15,8 @@
             "environment": [],
             "externalConsole": true,
             "MIMode": "lldb",
-            "preLaunchTask": "My C/C++: clang++ build active file"
+            "preLaunchTask": "My C/C++: clang++ build active file",
+            "postDebugTask": "Terminate All Tasks"
         }
     ]
 }
