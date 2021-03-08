@@ -25,7 +25,16 @@ using namespace std;
 //// Lege einen eigenen Datentyp namens "Bird" an, der vier Variablen vom Typ double namens
 //// 'pos_x', 'pos_y', 'v_x' und 'v_y' enthält und eine Variable vom Typ bool namens 'has_been_shot'.
 //// Initialisiere alle Variablen zu Null.
-// --> Bitte Code HIER ergänzen
+class Bird
+{
+public:
+    double pos_x{0.0}; // Position in x in m
+    double pos_y{0.0};
+    double v_x{0.0}; // Geschwindigkeit in x in m
+    double v_y{0.0};
+
+    bool has_been_shot{false}; // wird true, wenn Vogel abgefeuert wurde
+};
 
 int main()
 {
@@ -62,11 +71,14 @@ int main()
 
     //// AUFGABE A1.1
     //// Zeichne eine Bodenebene am unteren Rand des Terminal ein, die aus '_'-Zeichen besteht
-    // --> Bitte Code HIER ergänzen
+    for (int cnt_cols = 0; cnt_cols < num_cols; ++cnt_cols)
+    {
+        screen_buffer[ground_level][cnt_cols] = '_';
+    }
 
     //// AUFGABE A1.2
     //// Zeichne das Symbol '@' für das Ziel an der Stelle y=ground_level, x=pig_pos ein
-    // --> Bitte Code HIER ergänzen
+    screen_buffer[ground_level][pig_pos] = '@';
 
     // -----------
     // Schleuder einzeichnen
@@ -82,7 +94,7 @@ int main()
 
     //// AUFGABE 2.2
     //// Lege ein 1D-Array namens 'birds' vom Datentyp 'Bird' an, das aus 'num_birds' Elementen dieses Typs besteht
-    // --> Bitte Code HIER ergänzen
+    Bird birds[num_birds];
 
     int score{0};
     int cnt_birds{0};
@@ -90,13 +102,17 @@ int main()
     {
         //// AUFGABE 2.3
         //// Positioniere den aktuellen Vogel an der Stelle x=slingshot_pos, y=ground_level-2 und setze has_been_shot auf true
-        // --> Bitte Code HIER ergänzen
+        birds[cnt_birds].pos_x = slingshot_pos;
+        birds[cnt_birds].pos_y = ground_level - 3;
+        birds[cnt_birds].has_been_shot = true;
 
         //// AUFGABE 2.4
         //// Zeichne den Vogel in den screen_buffer als 'o'-Zeichen ein, indem du mit dem Befehl 'round()'
         //// die Fließkomma-Koordinaten in Ganzzahlen umwandelst. Lege dazu zwei neue Integer-Variablen an und
         //// speichere die gerundeten Koordinaten darin.
-        // --> Bitte Code HIER ergänzen
+        int cell_x = round(birds[cnt_birds].pos_x);
+        int cell_y = round(birds[cnt_birds].pos_y);
+        screen_buffer[cell_y][cell_x] = 'o';
 
         // -----------
         // 2D-Array im Terminal "zeichnen" (=ausgeben)
@@ -134,7 +150,8 @@ int main()
         //// AUFGABE 3.1
         // Berechne Startwerte für die x- und y-Geschwindigkeit des aktuellen Vogels als
         // Produkt aus Geschwindigkeit und Cosinus des Winkels (x) bzw. Sinus des Winkels (y)
-        // --> Bitte Code HIER ergänzen
+        birds[cnt_birds].v_x = speed * cos(angle);
+        birds[cnt_birds].v_y = speed * sin(angle);
 
         // -----------
         // Terminal in Dauerschleife animieren
@@ -151,20 +168,22 @@ int main()
             //// AUFGABE 4.1
             //// Runde die aktuelle x- und y-Position des Vogels mit dem Befehl round() und speichere das Ergebnis in old_x und old_y.
             int old_x{0}, old_y{0};
-            // --> Bitte Code HIER ergänzen
+            old_x = round(birds[cnt_birds].pos_x);
+            old_y = round(birds[cnt_birds].pos_y);
 
             //// AUFGABE 4.2
             //// Überschreibe die alte Position des Vogels mit `.` und stelle dabei sicher,
             //// dass ungültige Arrays-Indizes vermieden werden
-            // --> Bitte Code HIER ergänzen
+            if (old_y >= 0 && old_y < max_rows && old_x >= 0 && old_x < num_cols)
+                screen_buffer[old_y][old_x] = ' ';
 
             // -----------
             // Geschwindigkeit des Vogels aktualisieren
 
             //// AUFGABE 3.2
             //// Ziehe von der aktuellen y-Geschwindigkeit des Vogels das Produkt aus Schwerkraft und Zeit ab
-            // --> Bitte Code HIER ergänzen
-
+            birds[cnt_birds].v_y -= gravity * dt;
+            
             // -----------
             // Position des Vogels aktualisieren
 
@@ -172,19 +191,24 @@ int main()
             //// Addiere zur x-Position des Vogels das Produkt aus x-Geschwindigkeit und Zeit hinzu.
             //// Subtrahiere von der y-Position des Vogels das Produkt aus y-Geschwindigkeit und Zeit.
             //// (Hinweis: In der Computergrafik zeigt die y-Achse in der Regel von oben nach unten)
-            // --> Bitte Code HIER ergänzen
+            birds[cnt_birds].pos_x += birds[cnt_birds].v_x * dt;
+            birds[cnt_birds].pos_y -= birds[cnt_birds].v_y * dt;
 
             //// AUFGABE 3.4
             //// Prüfe, ob die aktuelle y-Position größer oder gleich der Bodeneben ist oder die x-Position größer oder gleich der Spaltenanzahl - 1
             //// Falls eine der beiden Bedingungen erfüllt ist, verlasse die Schleife.
-            // --> Bitte Code HIER ergänzen
+            if (birds[cnt_birds].pos_y >= ground_level || birds[cnt_birds].pos_x >= num_cols - 1)
+                break; // Animationsschleife verlassen
 
             //// AUFGABE 3.5
             //// Zeichne den Vogel in den screen_buffer als 'o'-Zeichen ein, indem du mit dem Befehl 'round()'
             //// die Fließkomma-Koordinaten in Ganzzahlen umwandelst. Zeichne dann an die aktuelle Position des
             //// Vogels das Zeichen 'o' und achte darauf, dass die neuen Koordinaten innerhalb des 2D-Arrays liegen.
             int new_x{0}, new_y{0};
-            // --> Bitte Code HIER ergänzen
+            new_x = round(birds[cnt_birds].pos_x);
+            new_y = round(birds[cnt_birds].pos_y);
+            if (new_y >= 0 && new_y < max_rows && new_x >= 0 && new_x < num_cols)
+                screen_buffer[new_y][new_x] = 'o';
 
             // -----------
             // 2D-Array inkl. Ziel und Vogel im Terminal ausgeben
