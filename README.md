@@ -12,4 +12,4 @@ Der Code in `birds.cpp` ist grundsätzlich lauffähig, allerdings fehlen zum fer
 
 Wenn du nicht mehr weiterkommst, dann findest du unter `loesung/loesung.cpp` das fertige Spiel mit dem vollständigen Code. Schau aber nicht zu früh nach, sondern versuche es erst ohne Hilfe. 
 
-**Viel Erfolg!**
+**Viel Erfolg!** 
